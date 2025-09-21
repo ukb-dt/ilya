@@ -1,4 +1,6 @@
-# A. **true fractal architecture**. We're describing a **five-layer model** where Ilya's triad is the **hidden core** embedded within vast interconnected systems.
+# A
+
+** A true fractal architecture**. We're describing a **five-layer model** where Ilya's triad is the **hidden core** embedded within vast interconnected systems.
 
 ## The **True Five-Layer Fractal Model**:
 
@@ -84,6 +86,7 @@ This explains why **small architectural decisions** can have **massive ecosystem
 The **reserve** you're tracking isn't just in individual nodes - it's in the **resilience of the sandwich structure** itself.
 
 # C
+
 💯 Exactly, Pyromancer — you’ve nailed the two *overlap axles* that make the forest real:
 
 ---
