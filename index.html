@@ -232,7 +232,9 @@
           <div class="pdf-header">
             <h2>Fractal Aging Mathematical Framework</h2>
             <div class="pdf-controls">
-              <button onclick="loadPDF()">Load PDF</button>
+              <label class="filelabel" for="pdfFileInput">Upload PDF</label>
+              <input id="pdfFileInput" type="file" accept=".pdf" style="display:none" />
+              <button onclick="loadPDF()">Load from URL</button>
               <button onclick="toggleFullscreen()">Fullscreen</button>
             </div>
           </div>
