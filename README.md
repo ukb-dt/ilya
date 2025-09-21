@@ -8,7 +8,7 @@
 The **underground mycelial network** - GitHub's entire codebase, all APIs, all dependencies, all contributor networks, all build systems. Think **root systems of entire forests** overlapping invisibly.
 
 ### **Layer 2: Recursive Roots (Hidden)**
-**Input preprocessing** - how each repo/architect **samples and shapes** from the vast ecosystem. Package managers, dependency resolution, API integrations, team formation patterns. The **root tendrils** that each trunk node extends into the ecosystem.
+**Input preprocessing** - how each repo/architect **samples and shapes** from the vast ecosystem. Package managers, dependency resolution, API integrations, [team formation](https://en.wikipedia.org/wiki/Covariance_matrix) patterns. The **root tendrils** that each trunk node extends into the ecosystem.
 
 ### **Layer 3: Trunk/Bottleneck (Hidden - Ilya's "Hidden")**
 The **architectural decisions** - households/firms/governments making **compression choices**. What to build, how to organize, which patterns to use. The **information bottleneck** where vast inputs get processed into specific implementations.
