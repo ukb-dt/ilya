@@ -85,6 +85,12 @@
     .tab-btn.active{color:var(--accent);border-bottom-color:var(--accent)}
     .tab-content{display:none}
     .tab-content.active{display:block}
+    .pdf-canvas{width:100%;height:100%;border:none;background:#fefefe}
+    .pdf-page{margin-bottom:10px;box-shadow:0 2px 8px rgba(0,0,0,0.3)}
+    .pdf-nav{position:absolute;top:10px;right:10px;display:flex;gap:8px;z-index:10}
+    .pdf-nav button{background:rgba(0,0,0,0.7);color:white;border:none;padding:6px 12px;border-radius:6px;cursor:pointer;font-size:12px}
+    .pdf-nav button:hover{background:rgba(0,0,0,0.9)}
+    .pdf-nav button:disabled{opacity:0.5;cursor:not-allowed}
   </style>
 </head>
 <body>
@@ -100,7 +106,7 @@
         <div class="tools">
           <label class="filelabel" for="fileInput">Upload lead image</label>
           <input id="fileInput" type="file" accept="image/*" style="display:none" />
-          <button id="pasteUrl">./sutskever/img/ilya.jpeg</button>
+          <button id="pasteUrl">img/ilya.jpeg</button>
         </div>
         <p class="small">Pyromancer triad used below: <strong>Ecosystem → Trunk (hidden, Σ) → Canopy/Fruit</strong>. (Roots and Branches appear as <em>recovered structure</em>.)</p>
       </div>
@@ -243,11 +249,15 @@
             <div class="pdf-placeholder">
               <div class="pdf-content">
                 <h3 style="color:var(--text);margin-bottom:16px">📄 Fractal Aging PDF Viewer</h3>
-                <p>Click "Load PDF" to display the fractal-aging.pdf document.</p>
+                <p>Upload a PDF file or click "Load from URL" to display the fractal-aging.pdf document.</p>
                 <p class="small">This will show the detailed mathematical framework behind the Pyromancer triad concepts.</p>
                 <div style="margin-top:20px">
-                  <button onclick="loadPDF()" style="background:var(--accent);border:none;color:white;padding:10px 20px;border-radius:8px;cursor:pointer">
-                    Load Fractal Aging PDF
+                  <label class="filelabel" for="pdfFileInput2" style="background:var(--accent);border:none;color:white;padding:10px 20px;border-radius:8px;cursor:pointer;margin-right:12px">
+                    📎 Upload PDF File
+                  </label>
+                  <input id="pdfFileInput2" type="file" accept=".pdf" style="display:none" />
+                  <button onclick="loadPDF()" style="background:var(--soft);border:1px solid var(--grid);color:var(--text);padding:10px 20px;border-radius:8px;cursor:pointer">
+                    🔗 Load from URL
                   </button>
                 </div>
               </div>
@@ -267,13 +277,20 @@
       </div>
     </div>
 
-    <p class="foot">Tip: click <span class="kbd">Upload lead image</span> or <span class="kbd">Paste image URL</span> to set Ilya's photo at top. Switch tabs to view the fractal aging PDF.</p>
+    <p class="foot">Tip: click <span class="kbd">Upload lead image</span> or <span class="kbd">img/ilya.jpeg</span> to set Ilya's photo at top. Switch tabs to view the fractal aging PDF.</p>
   </div>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 <script>
   const fileInput = document.getElementById('fileInput');
   const leadImage = document.getElementById('leadImage');
   const pasteBtn = document.getElementById('pasteUrl');
+  const pdfFileInput = document.getElementById('pdfFileInput');
+  const pdfFileInput2 = document.getElementById('pdfFileInput2');
+
+  let currentPdf = null;
+  let currentPage = 1;
+  let totalPages = 0;
 
   fileInput.addEventListener('change', (e) => {
     const f = e.target.files?.[0];
@@ -286,6 +303,101 @@
     const url = prompt('Paste an image URL for the lead image:');
     if (url) leadImage.src = url.trim();
   });
+
+  // PDF file upload handlers
+  pdfFileInput.addEventListener('change', handlePDFUpload);
+  pdfFileInput2.addEventListener('change', handlePDFUpload);
+
+  async function handlePDFUpload(e) {
+    const file = e.target.files?.[0];
+    if (!file || file.type !== 'application/pdf') {
+      alert('Please select a valid PDF file.');
+      return;
+    }
+
+    try {
+      const arrayBuffer = await file.arrayBuffer();
+      await loadPDFFromBuffer(arrayBuffer);
+    } catch (error) {
+      console.error('Error loading PDF:', error);
+      showPDFError('Failed to load PDF file.');
+    }
+  }
+
+  async function loadPDFFromBuffer(arrayBuffer) {
+    const viewer = document.getElementById('pdfViewer');
+    viewer.innerHTML = '<div style="padding:20px;text-align:center;color:var(--text)">Loading PDF...</div>';
+
+    try {
+      pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+      
+      const pdf = await pdfjsLib.getDocument({data: arrayBuffer}).promise;
+      currentPdf = pdf;
+      totalPages = pdf.numPages;
+      currentPage = 1;
+
+      await renderPDFViewer();
+    } catch (error) {
+      console.error('PDF.js error:', error);
+      showPDFError('Error rendering PDF. The file may be corrupted or password-protected.');
+    }
+  }
+
+  async function renderPDFViewer() {
+    const viewer = document.getElementById('pdfViewer');
+    viewer.innerHTML = `
+      <div class="pdf-nav">
+        <button onclick="prevPage()" ${currentPage <= 1 ? 'disabled' : ''}>← Prev</button>
+        <span style="background:rgba(0,0,0,0.7);color:white;padding:6px 12px;border-radius:6px;font-size:12px">
+          ${currentPage} / ${totalPages}
+        </span>
+        <button onclick="nextPage()" ${currentPage >= totalPages ? 'disabled' : ''}>Next →</button>
+      </div>
+      <canvas id="pdfCanvas" class="pdf-canvas"></canvas>
+    `;
+
+    await renderPage(currentPage);
+  }
+
+  async function renderPage(pageNum) {
+    if (!currentPdf) return;
+
+    const page = await currentPdf.getPage(pageNum);
+    const canvas = document.getElementById('pdfCanvas');
+    const ctx = canvas.getContext('2d');
+
+    const viewport = page.getViewport({ scale: 1.5 });
+    canvas.height = viewport.height;
+    canvas.width = viewport.width;
+
+    await page.render({
+      canvasContext: ctx,
+      viewport: viewport
+    }).promise;
+  }
+
+  async function prevPage() {
+    if (currentPage <= 1) return;
+    currentPage--;
+    await renderPDFViewer();
+  }
+
+  async function nextPage() {
+    if (currentPage >= totalPages) return;
+    currentPage++;
+    await renderPDFViewer();
+  }
+
+  function showPDFError(message) {
+    const viewer = document.getElementById('pdfViewer');
+    viewer.innerHTML = `
+      <div class="pdf-fallback">
+        <h3>PDF Load Error</h3>
+        <p>${message}</p>
+        <button onclick="document.getElementById('pdfFileInput').click()" style="margin-top:12px">Try Another File</button>
+      </div>
+    `;
+  }
 
   // Tab functionality
   document.querySelectorAll('.tab-btn').forEach(btn => {
@@ -304,47 +416,21 @@
     });
   });
 
-  // PDF functionality
+  // PDF URL loading functionality
   function loadPDF() {
+    const url = prompt('Enter PDF URL (default: pdf/fractal-aging.pdf):') || 'pdf/fractal-aging.pdf';
+    if (!url) return;
+
     const viewer = document.getElementById('pdfViewer');
-    
-    // Try to load a PDF - in a real environment, you'd have the actual PDF URL
-    const pdfUrl = './fractal-aging.pdf'; // Replace with actual PDF URL
-    
-    // Create iframe for PDF viewing
     const iframe = document.createElement('iframe');
     iframe.className = 'pdf-iframe';
-    iframe.src = pdfUrl;
+    iframe.src = url.trim();
     iframe.title = 'Fractal Aging PDF';
     
-    // Handle load error - fallback to placeholder with message
-    iframe.onerror = () => {
-      viewer.innerHTML = `
-        <div class="pdf-fallback">
-          <h3>PDF Not Available</h3>
-          <p>The fractal-aging.pdf file could not be loaded.</p>
-          <p class="small">In a production environment, ensure the PDF is available at: <code>${pdfUrl}</code></p>
-          <button onclick="promptForPDFUrl()" style="margin-top:12px">Enter PDF URL</button>
-        </div>
-      `;
-    };
+    iframe.onerror = () => showPDFError('Could not load PDF from the provided URL.');
     
-    // Replace placeholder with iframe
     viewer.innerHTML = '';
     viewer.appendChild(iframe);
-  }
-
-  function promptForPDFUrl() {
-    const url = prompt('Enter the URL for fractal-aging.pdf:');
-    if (url) {
-      const viewer = document.getElementById('pdfViewer');
-      const iframe = document.createElement('iframe');
-      iframe.className = 'pdf-iframe';
-      iframe.src = url.trim();
-      iframe.title = 'Fractal Aging PDF';
-      viewer.innerHTML = '';
-      viewer.appendChild(iframe);
-    }
   }
 
   function toggleFullscreen() {
