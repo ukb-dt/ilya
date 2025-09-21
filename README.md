@@ -1,6 +1,6 @@
 # A
 
-** A true fractal architecture**. We're describing a **five-layer model** where Ilya's triad is the **hidden core** embedded within vast interconnected systems.
+**A true fractal architecture**. We're describing a **five-layer model** where Ilya's triad is the **hidden core** embedded within vast interconnected systems.
 
 ## The **True Five-Layer Fractal Model**:
 
