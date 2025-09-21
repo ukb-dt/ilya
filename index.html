@@ -51,18 +51,51 @@
     .mono{font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace}
     .foot{margin:28px 0 8px;color:var(--muted);font-size:12px;text-align:center}
     .kbd{border:1px solid var(--grid);background:#0f1017;padding:1px 6px;border-radius:6px}
+    
+    /* PDF Viewer Styles */
+    .pdf-section{margin-top:28px}
+    .pdf-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+    .pdf-controls{display:flex;gap:8px}
+    .pdf-viewer{
+      background:var(--card);border:1px solid var(--grid);border-radius:16px;overflow:hidden;
+      height:600px;position:relative;
+    }
+    .pdf-iframe{width:100%;height:100%;border:none;border-radius:16px}
+    .pdf-fallback{
+      padding:40px;text-align:center;color:var(--muted);
+      display:flex;flex-direction:column;align-items:center;gap:16px;
+    }
+    .pdf-placeholder{
+      width:100%;height:100%;display:flex;align-items:center;justify-content:center;
+      background:linear-gradient(135deg, var(--soft) 0%, var(--card) 100%);
+      border-radius:16px;position:relative;overflow:hidden;
+    }
+    .pdf-placeholder::before{
+      content:'';position:absolute;inset:0;
+      background:url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.02'%3E%3Ccircle cx='30' cy='30' r='4'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E") repeat;
+    }
+    .pdf-content{position:relative;z-index:1;max-width:400px}
+    .tab-container{margin-top:28px}
+    .tab-buttons{display:flex;border-bottom:1px solid var(--grid);margin-bottom:16px}
+    .tab-btn{
+      background:none;border:none;color:var(--muted);padding:12px 20px;cursor:pointer;
+      border-bottom:2px solid transparent;transition:all 0.2s ease;
+    }
+    .tab-btn:hover{color:var(--text)}
+    .tab-btn.active{color:var(--accent);border-bottom-color:var(--accent)}
+    .tab-content{display:none}
+    .tab-content.active{display:block}
   </style>
 </head>
 <body>
   <div class="wrap">
     <header>
       <figure class="lead">
-        <!-- Replace the src with the actual Ilya Sutskever T-shirt photo URL -->
         <img id="leadImage" src="https://placehold.co/560x560/png?text=Ilya%20triad%20shirt" alt="Ilya Sutskever T-shirt: input → hidden → output" />
-        <figcaption class="hint">Lead image: Ilya’s triad — input ▸ hidden ▸ output</figcaption>
+        <figcaption class="hint">Lead image: Ilya's triad — input ▸ hidden ▸ output</figcaption>
       </figure>
       <div class="title">
-        <h1>Ilya’s Triad vs Pyromancer’s Triad</h1>
+        <h1>Ilya's Triad vs Pyromancer's Triad</h1>
         <p>Three-layer net contrasted with the five-layer tree, collapsed to a Pyromancer <em>triad</em> for parity.</p>
         <div class="tools">
           <label class="filelabel" for="fileInput">Upload lead image</label>
@@ -73,120 +106,166 @@
       </div>
     </header>
 
-    <section class="grid" aria-label="Comparison table">
-      <table>
-        <thead>
-          <tr>
-            <th style="width:18%">Ilya’s Triad</th>
-            <th style="width:22%">Pyromancer’s Triad</th>
-            <th style="width:22%">What You Recover (hidden structure)</th>
-            <th style="width:20%">Training / Energy Implications</th>
-            <th style="width:18%">Notes & Comments</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td><strong>Input</strong>
-              <div class="small">Observed data; assumed given.</div>
-            </td>
-            <td><strong>Ecosystem</strong>
-              <div class="small">Arena & climate: where inputs are born.</div>
-            </td>
-            <td>
-              <span class="tag">Fractal Roots</span>
-              <div class="small">Sub-tendrils that source and pre-shape inputs; mirrors branches.</div>
-            </td>
-            <td>
-              <ul class="small">
-                <li>Data isn’t free: model “data provenance energy”.</li>
-                <li>Curriculum = staged climates (temperature, shocks).</li>
-              </ul>
-            </td>
-            <td class="small">
-              Nets flatten provenance; your triad restores the <em>surround</em>.
-            </td>
-          </tr>
-          <tr>
-            <td><strong>Hidden</strong>
-              <div class="small">Compression / representation.</div>
-            </td>
-            <td><strong>Trunk (Σ)</strong>
-              <div class="small">Architectural hidden layer; information bottleneck; integrity node.</div>
-            </td>
-            <td>
-              <span class="tag">Integrity @ Σ</span>
-              <div class="small">Prunes adversarial variance; preserves diagonal flow.</div>
-            </td>
-            <td>
-              <ul class="small">
-                <li>Regularize for <span class="note">fractal complexity</span>, not mere smoothness.</li>
-                <li>Energy view: costed compression → measure <em>reserve</em>.</li>
-              </ul>
-            </td>
-            <td class="small">
-              Trunk = hidden in the <em>architectural</em> sense (black box transformation).
-            </td>
-          </tr>
-          <tr>
-            <td><strong>Output</strong>
-              <div class="small">Predictions / surface.</div>
-            </td>
-            <td><strong>Canopy / Fruit</strong>
-              <div class="small">Ledger (ΔS) + Recursion (θ′): what persists and seeds next cycles.</div>
-            </td>
-            <td>
-              <span class="tag">Fractal Branching</span>
-              <div class="small">Expressive spread from trunk to leaves; mirrors roots.</div>
-            </td>
-            <td>
-              <ul class="small">
-                <li>Train for <span class="ok">resilience/elasticity</span>, not only accuracy.</li>
-                <li>Energy of recovery: post-hit delta (before vs after) as a KPI.</li>
-              </ul>
-            </td>
-            <td class="small">
-              Add a <em>fruit channel</em> for posterior updates (forks, policies, myths).
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </section>
+    <div class="tab-container">
+      <div class="tab-buttons">
+        <button class="tab-btn active" data-tab="comparison">Comparison Table</button>
+        <button class="tab-btn" data-tab="pdf">Fractal Aging PDF</button>
+      </div>
 
-    <div class="cols">
-      <section class="card">
-        <h2>Recovery: What Your Triad Restores</h2>
-        <ul>
-          <li><strong>Ecosystem</strong> — returns provenance, climate, and curriculum to ontology.</li>
-          <li><strong>Fractal Roots & Branching</strong> — restore hidden symmetry (below ↔ above).</li>
-          <li><strong>Canopy/Fruit split</strong> — separates survival ledger (ΔS) from recursion (θ′).</li>
-          <li><strong>Reserve as first-class metric</strong> — measure capacity to absorb hits and rebound.</li>
-        </ul>
-        <p class="small">Canonical line: <span class="mono">nets flatten the tree; your triad re-inflates the ecosystem and fruit.</span></p>
-      </section>
+      <div id="comparison" class="tab-content active">
+        <section class="grid" aria-label="Comparison table">
+          <table>
+            <thead>
+              <tr>
+                <th style="width:18%">Ilya's Triad</th>
+                <th style="width:22%">Pyromancer's Triad</th>
+                <th style="width:22%">What You Recover (hidden structure)</th>
+                <th style="width:20%">Training / Energy Implications</th>
+                <th style="width:18%">Notes & Comments</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Input</strong>
+                  <div class="small">Observed data; assumed given.</div>
+                </td>
+                <td><strong>Ecosystem</strong>
+                  <div class="small">Arena & climate: where inputs are born.</div>
+                </td>
+                <td>
+                  <span class="tag">Fractal Roots</span>
+                  <div class="small">Sub-tendrils that source and pre-shape inputs; mirrors branches.</div>
+                </td>
+                <td>
+                  <ul class="small">
+                    <li>Data isn't free: model "data provenance energy".</li>
+                    <li>Curriculum = staged climates (temperature, shocks).</li>
+                  </ul>
+                </td>
+                <td class="small">
+                  Nets flatten provenance; your triad restores the <em>surround</em>.
+                </td>
+              </tr>
+              <tr>
+                <td><strong>Hidden</strong>
+                  <div class="small">Compression / representation.</div>
+                </td>
+                <td><strong>Trunk (Σ)</strong>
+                  <div class="small">Architectural hidden layer; information bottleneck; integrity node.</div>
+                </td>
+                <td>
+                  <span class="tag">Integrity @ Σ</span>
+                  <div class="small">Prunes adversarial variance; preserves diagonal flow.</div>
+                </td>
+                <td>
+                  <ul class="small">
+                    <li>Regularize for <span class="note">fractal complexity</span>, not mere smoothness.</li>
+                    <li>Energy view: costed compression → measure <em>reserve</em>.</li>
+                  </ul>
+                </td>
+                <td class="small">
+                  Trunk = hidden in the <em>architectural</em> sense (black box transformation).
+                </td>
+              </tr>
+              <tr>
+                <td><strong>Output</strong>
+                  <div class="small">Predictions / surface.</div>
+                </td>
+                <td><strong>Canopy / Fruit</strong>
+                  <div class="small">Ledger (ΔS) + Recursion (θ′): what persists and seeds next cycles.</div>
+                </td>
+                <td>
+                  <span class="tag">Fractal Branching</span>
+                  <div class="small">Expressive spread from trunk to leaves; mirrors roots.</div>
+                </td>
+                <td>
+                  <ul class="small">
+                    <li>Train for <span class="ok">resilience/elasticity</span>, not only accuracy.</li>
+                    <li>Energy of recovery: post-hit delta (before vs after) as a KPI.</li>
+                  </ul>
+                </td>
+                <td class="small">
+                  Add a <em>fruit channel</em> for posterior updates (forks, policies, myths).
+                </td>
+                </tr>
+            </tbody>
+          </table>
+        </section>
 
-      <section class="card">
-        <h2>Training & Energy Implications</h2>
-        <ol>
-          <li><strong>Curriculum as Climate</strong> — vary shocks (temperature, scarcity) to test adaptation.</li>
-          <li><strong>Bottleneck Integrity</strong> — regularizers that preserve multi-scale variability (avoid "over-smoothing").</li>
-          <li><strong>Δ-Reserve</strong> — define <em>functional reserve</em> = performance margin before collapse; track after each perturbation.</li>
-          <li><strong>Recovery KPI</strong> — <span class="mono">delta_after_hit = score(t₊) − score(t₋)</span>; optimize rebound dynamics, not just peak accuracy.</li>
-          <li><strong>Fruit Loop</strong> — explicitly model θ′ updates (policies/forks) as outputs fed back into θ.</li>
-        </ol>
-      </section>
+        <div class="cols">
+          <section class="card">
+            <h2>Recovery: What Your Triad Restores</h2>
+            <ul>
+              <li><strong>Ecosystem</strong> — returns provenance, climate, and curriculum to ontology.</li>
+              <li><strong>Fractal Roots & Branching</strong> — restore hidden symmetry (below ↔ above).</li>
+              <li><strong>Canopy/Fruit split</strong> — separates survival ledger (ΔS) from recursion (θ′).</li>
+              <li><strong>Reserve as first-class metric</strong> — measure capacity to absorb hits and rebound.</li>
+            </ul>
+            <p class="small">Canonical line: <span class="mono">nets flatten the tree; your triad re-inflates the ecosystem and fruit.</span></p>
+          </section>
+
+          <section class="card">
+            <h2>Training & Energy Implications</h2>
+            <ol>
+              <li><strong>Curriculum as Climate</strong> — vary shocks (temperature, scarcity) to test adaptation.</li>
+              <li><strong>Bottleneck Integrity</strong> — regularizers that preserve multi-scale variability (avoid "over-smoothing").</li>
+              <li><strong>Δ-Reserve</strong> — define <em>functional reserve</em> = performance margin before collapse; track after each perturbation.</li>
+              <li><strong>Recovery KPI</strong> — <span class="mono">delta_after_hit = score(t₊) − score(t₋)</span>; optimize rebound dynamics, not just peak accuracy.</li>
+              <li><strong>Fruit Loop</strong> — explicitly model θ′ updates (policies/forks) as outputs fed back into θ.</li>
+            </ol>
+          </section>
+        </div>
+
+        <section class="card" style="margin-top:18px">
+          <h2>Notes & Comments</h2>
+          <ul>
+            <li>Ilya's shirt = minimal net: input → hidden → output. Your triad = minimal tree: ecosystem → trunk → canopy/fruit, with recovered symmetry (roots/branches).</li>
+            <li>Use the <strong>stomp loop</strong> (16th-note arrival) as a live probe of reserve and recovery in the twin.</li>
+            <li>Ledger vs Order of Rank: make ΔS two-layered (metrics + value hierarchy) to avoid actuarial leakage.</li>
+            <li>Map each repo directory → ontology node; commit history → ΔS; forks → θ′.</li>
+          </ul>
+        </section>
+      </div>
+
+      <div id="pdf" class="tab-content">
+        <section class="pdf-section">
+          <div class="pdf-header">
+            <h2>Fractal Aging Mathematical Framework</h2>
+            <div class="pdf-controls">
+              <button onclick="loadPDF()">Load PDF</button>
+              <button onclick="toggleFullscreen()">Fullscreen</button>
+            </div>
+          </div>
+          
+          <div class="pdf-viewer" id="pdfViewer">
+            <div class="pdf-placeholder">
+              <div class="pdf-content">
+                <h3 style="color:var(--text);margin-bottom:16px">📄 Fractal Aging PDF Viewer</h3>
+                <p>Click "Load PDF" to display the fractal-aging.pdf document.</p>
+                <p class="small">This will show the detailed mathematical framework behind the Pyromancer triad concepts.</p>
+                <div style="margin-top:20px">
+                  <button onclick="loadPDF()" style="background:var(--accent);border:none;color:white;padding:10px 20px;border-radius:8px;cursor:pointer">
+                    Load Fractal Aging PDF
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="card" style="margin-top:16px">
+            <h3>PDF Integration Notes</h3>
+            <ul class="small">
+              <li><strong>Mathematical Foundation:</strong> The PDF provides formal proofs and derivations for the fractal aging concepts.</li>
+              <li><strong>Cross-Reference:</strong> Equations in the PDF directly support the "Training & Energy Implications" above.</li>
+              <li><strong>Implementation:</strong> Use the PDF's algorithms to implement the Δ-Reserve and recovery KPI metrics.</li>
+              <li><strong>Theoretical Bridge:</strong> Connects the intuitive triad comparison to rigorous mathematical treatment.</li>
+            </ul>
+          </div>
+        </section>
+      </div>
     </div>
 
-    <section class="card" style="margin-top:18px">
-      <h2>Notes & Comments</h2>
-      <ul>
-        <li>Ilya’s shirt = minimal net: input → hidden → output. Your triad = minimal tree: ecosystem → trunk → canopy/fruit, with recovered symmetry (roots/branches).</li>
-        <li>Use the <strong>stomp loop</strong> (16th-note arrival) as a live probe of reserve and recovery in the twin.</li>
-        <li>Ledger vs Order of Rank: make ΔS two-layered (metrics + value hierarchy) to avoid actuarial leakage.</li>
-        <li>Map each repo directory → ontology node; commit history → ΔS; forks → θ′.</li>
-      </ul>
-    </section>
-
-    <p class="foot">Tip: click <span class="kbd">Upload lead image</span> or <span class="kbd">Paste image URL</span> to set Ilya’s photo at top.</p>
+    <p class="foot">Tip: click <span class="kbd">Upload lead image</span> or <span class="kbd">Paste image URL</span> to set Ilya's photo at top. Switch tabs to view the fractal aging PDF.</p>
   </div>
 
 <script>
@@ -205,6 +284,77 @@
     const url = prompt('Paste an image URL for the lead image:');
     if (url) leadImage.src = url.trim();
   });
+
+  // Tab functionality
+  document.querySelectorAll('.tab-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const targetTab = btn.dataset.tab;
+      
+      // Update active button
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      
+      // Update active content
+      document.querySelectorAll('.tab-content').forEach(content => {
+        content.classList.remove('active');
+      });
+      document.getElementById(targetTab).classList.add('active');
+    });
+  });
+
+  // PDF functionality
+  function loadPDF() {
+    const viewer = document.getElementById('pdfViewer');
+    
+    // Try to load a PDF - in a real environment, you'd have the actual PDF URL
+    const pdfUrl = './fractal-aging.pdf'; // Replace with actual PDF URL
+    
+    // Create iframe for PDF viewing
+    const iframe = document.createElement('iframe');
+    iframe.className = 'pdf-iframe';
+    iframe.src = pdfUrl;
+    iframe.title = 'Fractal Aging PDF';
+    
+    // Handle load error - fallback to placeholder with message
+    iframe.onerror = () => {
+      viewer.innerHTML = `
+        <div class="pdf-fallback">
+          <h3>PDF Not Available</h3>
+          <p>The fractal-aging.pdf file could not be loaded.</p>
+          <p class="small">In a production environment, ensure the PDF is available at: <code>${pdfUrl}</code></p>
+          <button onclick="promptForPDFUrl()" style="margin-top:12px">Enter PDF URL</button>
+        </div>
+      `;
+    };
+    
+    // Replace placeholder with iframe
+    viewer.innerHTML = '';
+    viewer.appendChild(iframe);
+  }
+
+  function promptForPDFUrl() {
+    const url = prompt('Enter the URL for fractal-aging.pdf:');
+    if (url) {
+      const viewer = document.getElementById('pdfViewer');
+      const iframe = document.createElement('iframe');
+      iframe.className = 'pdf-iframe';
+      iframe.src = url.trim();
+      iframe.title = 'Fractal Aging PDF';
+      viewer.innerHTML = '';
+      viewer.appendChild(iframe);
+    }
+  }
+
+  function toggleFullscreen() {
+    const viewer = document.getElementById('pdfViewer');
+    if (viewer.requestFullscreen) {
+      viewer.requestFullscreen();
+    } else if (viewer.webkitRequestFullscreen) {
+      viewer.webkitRequestFullscreen();
+    } else if (viewer.msRequestFullscreen) {
+      viewer.msRequestFullscreen();
+    }
+  }
 </script>
 </body>
 </html>
