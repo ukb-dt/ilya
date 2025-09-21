@@ -1,6 +1,8 @@
+> *American and the immigrant fractal*
+
 # A
 
-**A true fractal architecture**. We're describing a **five-layer model** where Ilya's triad is the **hidden core** embedded within vast interconnected systems.
+**A true [fractal](https://www.msn.com/en-in/money/topstories/elon-musk-satya-nadella-and-others-h-1b-holders-who-built-america-s-tech-giants/ar-AA1MZhDG?ocid=finance-verthp-feeds) architecture**. We're describing a **five-layer model** where Ilya's triad is the **hidden core** embedded within vast interconnected systems.
 
 ## The **True Five-Layer Fractal Model**:
 
